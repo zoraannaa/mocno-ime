@@ -4,6 +4,7 @@
 #include <linux/i2c.h>
 #include <linux/fs.h>
 #include <asm/uaccess.h>
+#include <unistd.h>
 
 #include "nunchuk.h"
 
@@ -39,7 +40,7 @@ static int nunchuk_handshake(void)
 	i2c_master_send(nunchuk_client,buffer,2);
 	usleep(1);
 	buffer[0]=0xfb;
-	buffer[1]=0x00
+	buffer[1]=0x00;
 	i2c_master_send(nunchuk_client,buffer,2);
 	usleep(1);
     return RET_SUCCESS;
