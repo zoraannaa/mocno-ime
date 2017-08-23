@@ -38,11 +38,11 @@ static int nunchuk_handshake(void)
 {
 	char buffer[2]={0xf0,0x55};
 	i2c_master_send(nunchuk_client,buffer,2);
-	usleep(1);
+	udelay(1);
 	buffer[0]=0xfb;
 	buffer[1]=0x00;
 	i2c_master_send(nunchuk_client,buffer,2);
-	usleep(1);
+	udelay(1);
     return RET_SUCCESS;
 }
 
