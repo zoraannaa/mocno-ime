@@ -35,12 +35,26 @@ static struct file_operations fops = {
 
 static int nunchuk_handshake(void)
 {
+	char buffer[2]={0xf0,0x55};
+	i2c_master_send(nunchuk_client,buffer,2);
+	usleep(1);
+	buffer[0]=0xfb;
+	buffer[1]=0x00
+	i2c_master_send(nunchuk_client,buffer,2);
+	usleep(1);
     return RET_SUCCESS;
 }
 
 static int nunchuk_read_registers(struct i2c_client *client, u8 *buf,
 								  int buf_size)
 {
+
+	char buffer[]={0x00};
+	i2c_master_send(client,buffer,1);
+	msleep(10);
+	i2c_master_receiver(client,buf,buf_size);
+	
+
 	return RET_SUCCESS;
 }
 
@@ -117,7 +131,32 @@ static int nunchuk_release(struct inode *inode, struct file *file)
 static ssize_t nunchuk_read(struct file *filp, char *buffer, size_t length, 
                            loff_t * offset)
 {
-    return length;
+	char pomocni[6];
+	int i;
+	nunchuk_read_registers(nunchuk_client,pomocni,6);
+	for(i=0;i<6;i++)
+	{
+		put_user(pomocni[i],buffer+i);
+	}
+	printk(KERN_INFO "X kordinata %d", pomocni[0]);
+	printk(KERN_INFO "Y kordinata %d", pomocni[1]);
+	if(pomocni[5]&0x01)
+	{
+		printk(KERN_INFO "Iskljucen Z button");
+	}
+	else 
+	{	
+		printk(KERN_INFO "Pritisnut Z button");
+	}
+	if(pomocni[5]&0x02)
+	{
+		printk(KERN_INFO "Iskljucen C button");
+	}
+	else 
+	{
+		printk(KERN_INFO "Pritisnut C button");
+	}
+    	return length;
 }
 
 module_init(init_nunchuk_module);
