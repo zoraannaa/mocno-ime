@@ -4,7 +4,7 @@
 #include <linux/i2c.h>
 #include <linux/fs.h>
 #include <asm/uaccess.h>
-#include <unistd.h>
+#include <linux/wait.h>
 
 #include "nunchuk.h"
 
