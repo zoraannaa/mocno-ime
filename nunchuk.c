@@ -1,10 +1,10 @@
 /* INCLUDES */
 #include <linux/kernel.h>
 #include <linux/module.h>
+#include <linux/delay.h>
 #include <linux/i2c.h>
 #include <linux/fs.h>
 #include <asm/uaccess.h>
-#include <linux/wait.h>
 
 #include "nunchuk.h"
 
@@ -52,7 +52,7 @@ static int nunchuk_read_registers(struct i2c_client *client, u8 *buf,
 
 	char buffer[]={0x00};
 	i2c_master_send(client,buffer,1);
-	msleep(10);
+	mdelay(10);
 	i2c_master_receiver(client,buf,buf_size);
 	
 
